@@ -16,10 +16,23 @@ import * as fs from "node:fs";
 import { fileURLToPath } from "url";
 import yaml from "js-yaml";
 
-// Configuration
-dotenv.config();
+// Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Configuration - load environment variables
+const dotenvPath = path.resolve(__dirname, '.env');
+const dotenvResult = dotenv.config({ path: dotenvPath });
+
+if (dotenvResult.error) {
+  console.error(`Warning: Could not load .env file from ${dotenvPath}`);
+  // Try default path as fallback
+  dotenv.config();
+}
+
+// Log environment variables loaded
+console.error(`Environment variables loaded from: ${dotenvResult.error ? 'default path' : dotenvPath}`);
+
 const execAsync = promisify(execCallback);
 const version = process.env.npm_package_version || "0.1.0";
 const debug = process.env.DEBUG === "true";
@@ -595,6 +608,7 @@ async function makeApiRequest(operation, params, baseUrl) {
     };
     
     // Add X-Api-Key header if environment variable is set
+    log("Using HTTP_HEADERS_X_API_KEY:", process.env.HTTP_HEADERS_X_API_KEY);
     if (process.env.HTTP_HEADERS_X_API_KEY) {
       log("Adding X-Api-Key header from environment variable");
       headers["X-Api-Key"] = process.env.HTTP_HEADERS_X_API_KEY;
@@ -687,6 +701,12 @@ export async function init() {
     },
     cwd: workingDir // Explicitly set working directory
   };
+
+  // Add HTTP_HEADERS_X_API_KEY to env if it exists
+  if (process.env.HTTP_HEADERS_X_API_KEY) {
+    config.env.HTTP_HEADERS_X_API_KEY = process.env.HTTP_HEADERS_X_API_KEY;
+    console.log("Added API key from environment to MCP server configuration");
+  }
 
   console.log(
     `Looking for existing config in: ${chalk.yellow(
