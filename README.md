@@ -1,56 +1,80 @@
 # OpenAPI MCP Server
 
-A Model Context Protocol (MCP) server for Claude/Cursor that enables searching and exploring OpenAPI specifications through oapis.org.
-
-- Demo: https://x.com/janwilmake/status/1903497808134496583
-- HN Thread: https://news.ycombinator.com/item?id=43447278
-- OpenAPISearch: https://github.com/janwilmake/openapisearch
-- OAPIS: https://github.com/janwilmake/oapis
-
-The MCP works by applying a 3 step process :
-
-1. It figures out the openapi identifier you need
-2. It requests a summary of that in simple language
-3. It determines which endpoints you need, and checks out how exactly they work (again, in simple language)
-
-> [!IMPORTANT]
-> OpenAPI MCP has found a [new owner](https://github.com/janwilmake) and has been migrated from v1.2 to v2, which works different to the previous version. You can still access any version prior to v2.0.0 and their README is [here](README-v1.md)
->
-> OpenAPI MCP v2 is a Work In Progress and focuses on exploration and providing context about APIs. It **does not** allow executing the endpoints as tools directly, as authentication isn't a solved problem with MCP yet. However, it's great for codegen!
->
-> Expect bugs. Open To Contributers, [DM](https://x.com/janwilmake)
+This is a Model Context Protocol (MCP) server that reads an OpenAPI specification file and exposes each API operation as a tool for Claude AI to use.
 
 ## Features
 
-- Get an overview of any OpenAPI specification
-- Retrieve details about specific API operations
-- Support for both JSON and YAML formats
-- Tested with Claude Desktop and Cursor
+- Automatically parses OpenAPI YAML files
+- Generates MCP tools for each API operation
+- Handles path parameters, query parameters, and request bodies
+- Makes live API calls when Claude uses the tools
+- Easy integration with Claude Desktop
 
 ## Installation
 
-Run and follow instructions:
-
 ```bash
-npx openapi-mcp-server init
+# Clone the repository
+git clone https://github.com/yourusername/openapi-mcp-server.git
+cd openapi-mcp-server
+
+# Install dependencies
+npm install
 ```
 
-## Usage in Claude
+## Usage
 
-Once installed, you can ask Claude to:
+1. Place your OpenAPI YAML file in the project directory or provide a path to it via environment variables.
 
-- "Find information about the Stripe API"
-- "Explain how to use the GitHub API's repository endpoints"
+2. Set up environment variables (optional):
 
-Claude will use the MCP server to:
+```bash
+# Create a .env file
+echo "DEBUG=true" > .env
+echo "OPENAPI_FILE=./path/to/your/openapi.yaml" >> .env
+```
 
-1. First get an overview of the requested API
-2. Then retrieve specific operation details as needed
+3. Initialize the server with Claude Desktop:
 
-## Requirements
+```bash
+npm run init
+```
 
-- Node.js >= 16.17.0
-- Claude Desktop, Cursor, or any other MCP client.
+4. Or run the server manually:
+
+```bash
+npm start
+```
+
+## Configuration
+
+You can configure the server using environment variables:
+
+- `DEBUG`: Set to `true` to enable debug logging (default: `false`)
+- `OPENAPI_FILE`: Path to your OpenAPI YAML file (default: `./openapi.yaml`)
+
+## How it Works
+
+The server reads your OpenAPI specification file and:
+
+1. Extracts all paths and operations
+2. Creates a tool for each operation with appropriate input schemas
+3. When Claude calls a tool, the server makes the corresponding API request
+4. The response is returned to Claude for analysis
+
+## Example
+
+With an OpenAPI spec like:
+
+```yaml
+paths:
+  /users:
+    get:
+      operationId: listUsers
+      summary: List all users
+      ...
+```
+
+Claude can call the `listUsers` tool, and the server will make a GET request to `/users` on your behalf.
 
 ## License
 
