@@ -594,6 +594,12 @@ async function makeApiRequest(operation, params, baseUrl) {
       "Content-Type": "application/json",
     };
     
+    // Add X-Api-Key header if environment variable is set
+    if (process.env.HTTP_HEADERS_X_API_KEY) {
+      log("Adding X-Api-Key header from environment variable");
+      headers["X-Api-Key"] = process.env.HTTP_HEADERS_X_API_KEY;
+    }
+    
     const requestOptions = {
       method: operation.method.toUpperCase(),
       headers,
