@@ -1,0 +1,37 @@
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+startCommand:
+  type: stdio
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => {
+      const env = {};
+      if (config.openapiFile) env.OPENAPI_FILE = config.openapiFile;
+      if (config.httpHeadersXApiKey) env.HTTP_HEADERS_X_API_KEY = config.httpHeadersXApiKey;
+      if (typeof config.debug !== 'undefined') env.DEBUG = config.debug.toString();
+      return {
+        command: 'node',
+        args: ['openapi-mcp.js', 'run'],
+        env
+      };
+    }
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    properties:
+      openapiFile:
+        type: string
+        default: ./openapi.yaml
+        description: Path to OpenAPI YAML file
+      httpHeadersXApiKey:
+        type: string
+        description: API key for authentication (if required)
+      debug:
+        type: boolean
+        default: false
+        description: Enable debug logging
+  exampleConfig:
+    openapiFile: ./openapi.yaml
+    httpHeadersXApiKey: your_api_key_here
+    debug: false
