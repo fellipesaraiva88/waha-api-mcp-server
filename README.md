@@ -3,6 +3,7 @@
 [![CI/CD Pipeline](https://github.com/yourusername/openapi-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/openapi-mcp-server/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/openapi-mcp-server.svg)](https://badge.fury.io/js/openapi-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![smithery badge](https://smithery.ai/badge/@fellipesaraiva88/waha-api-mcp-server)](https://smithery.ai/server/@fellipesaraiva88/waha-api-mcp-server)
 
 > **Talk to any OpenAPI (v3.1) compliant API through Claude Desktop!**
 
@@ -19,6 +20,14 @@ This is a Model Context Protocol (MCP) server that reads an OpenAPI specificatio
 - **Authentication Support**: Built-in support for API key authentication
 
 ## 📦 Installation
+
+### Installing via Smithery
+
+To install waha-api-mcp-server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@fellipesaraiva88/waha-api-mcp-server):
+
+```bash
+npx -y @smithery/cli install @fellipesaraiva88/waha-api-mcp-server --client claude
+```
 
 ### Quick Start with npx
 
