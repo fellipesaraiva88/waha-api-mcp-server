@@ -21,6 +21,9 @@
   "scripts": {
     "start": "node openapi-mcp.js run",
     "init": "node openapi-mcp.js init",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "postinstall": "chmod +x openapi-mcp.js"
   },
   "dependencies": {
@@ -29,6 +32,10 @@
     "dotenv": "^16.4.5",
     "undici": "^5.28.4",
     "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0"
   },
   "engines": {
     "node": ">=16.17.0"
